@@ -3,6 +3,7 @@
 const productSection = document.getElementById('app');
 const navElement = document.getElementById('navigation')
 const basketIcon = document.getElementById('basketIcon')
+const loadingSection = document.getElementById("loading")
 
 
 
@@ -93,6 +94,8 @@ function ReadLocalStorageData() {
 
 function InitApp() {
 
+    // to do create loading screen
+    CreateLoadingScreen('all')
     InitializeBasket()
     GetProductData()
     GetCategoryData()
@@ -255,12 +258,14 @@ function NavCallback(CategoryName) {
     //console.log(CategoryName);
     CloseMobileNav()
     // get data from API  bug API url og send videre
+
+    // to do call loading screen
+    CreateLoadingScreen('partial')
     if (CategoryName == "All") {
         CreateProductView(myProducts)
     }
     else {
         let myCategoryURL = `https://dummyjson.com/products/category/${CategoryName}`
-
         GetProductsByCategory(myCategoryURL)
     }
 
@@ -272,6 +277,7 @@ function NavCallback(CategoryName) {
 
 function ProductCallback(myId) {
 
+    CreateLoadingScreen('partial')
     //console.log(myId);
     let myClickedProduct = null
 
@@ -301,6 +307,8 @@ function ProductCallback(myId) {
 //----------------------------------------------------------------------
 
 function LogoCallback() {
+    // to do call loading screen
+    CreateLoadingScreen('partial')
     GetProductData()
 }
 
@@ -377,6 +385,8 @@ function BasketIconCallback() {
     });
 
     BuildBasket(myProducts)
+    
+
 }
 
 //----------------------------------------------------------------------
@@ -446,10 +456,53 @@ function ToggleMenu() {
     let myMenues = document.getElementById('menuLists')
     myMenues.classList.toggle('hidden')
 
+
 }
+window.addEventListener("load", (event) => {
+
+
+    removeLoadingScreen("all")
+    console.log("page is fully loaded");
+});
 
 
 /* view code------------------------------------------------------------- */
+
+function CreateLoadingScreen(myMode) {
+
+    if (myMode == "all") {
+
+        navElement.style.display = "none"
+        productSection.style.display = "none"
+        loadingSection.style.display = "block"
+    } else {
+
+        productSection.style.display = "none"
+        loadingSection.style.display = "block"
+
+    }
+
+
+
+}
+function removeLoadingScreen(myMode) {
+
+
+    if (myMode == "all") {
+
+        navElement.style.display = "block"
+        productSection.style.display = "block"
+        loadingSection.style.display = "none"
+    } else {
+
+
+        productSection.style.display = "block"
+        loadingSection.style.display = "none"
+
+    }
+
+
+}
 
 function ShowMobileNav() {
 
@@ -575,6 +628,7 @@ function CreateProductView(myCards) {
     myHTML += '</section>'
 
     productSection.innerHTML = myHTML
+    removeLoadingScreen("partial")
 }
 
 
@@ -594,12 +648,14 @@ function buildProduct(product) {
 
 
     productSection.innerHTML = myHTML
+    removeLoadingScreen("partial")
 }
 
 
 //----------------------------------------------------------------------
 function clearApp() {
     productSection.innerHTML = ""
+    
 
 }
 
